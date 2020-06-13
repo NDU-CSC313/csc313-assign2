@@ -34,6 +34,16 @@ iterator find(iterator begin, iterator end, const T& val) {
 	}
 	return begin;
 }
+
+template<typename iterator, typename P>
+iterator find_if(iterator begin, iterator end, P pred) {
+	while (begin != end) {
+		if (pred(*begin))return begin;
+		begin++;
+	}
+	return begin;
+}
+
 /// @brief 
 /// @tparam iterator 
 /// @tparam T 
@@ -54,57 +64,21 @@ iterator remove(iterator begin,iterator end, T val) {
 		}
 	return begin;
 }
+template<typename iterator, typename P>
+iterator remove_if(iterator begin, iterator end, P pred) {
+	begin = ::find_if(begin, end, pred);
+	if (begin != end)
+		for (iterator itr = begin + 1; itr != end; itr++) {
+			if (!pred(*itr)) {
+				*begin = std::move(*itr);
+				begin++;
+			}
+
+		}
+	return begin;
+}
 int main(){
 	
-	//v.reserve(10);
-	//if (v.begin() == v.end())std::cout << "the same\n";
-/*	{
-		std::vector<TestClass> v;
-		v.push_back(TestClass(1, 2));
-	}
-	std::cout << "emplace back\n";
-	{std::vector<TestClass> v;
-		v.emplace_back(3, 4);
-	}*/
-	//std::cout << "Whereas \n";
-	//std::vector<TestClass> u(3);
-	//if (u.begin() != u.end())std::cout << "not the same\n";
-/*	int n = 10;
-	std::vector<int> c;
-	for (int i = 0; i < n; i++)
-		c.push_back(dist(e));
-	int val = dist(e);
-	std::cout << val << " to be removed\n";
-	std::vector<int> d = c;
-	for(auto& x:c)
-		std::cout<<x<<",";
-	std::cout<<"\n----------------\n";
-	auto a=  std:: remove(c.begin(),c.end(),val);
-	auto b=::remove(d.begin(), d.end(), val);
-	for(auto& x:c)
-		std::cout<<x<<",";
-	std::cout<<"\n";
-	for (auto& x : d)
-		std::cout << x << ",";
-	std::cout << "\n";
-	std::cout << "\n---------------\n";
-	for (auto itr = c.begin(); itr != a; itr++)
-		std::cout << *itr << ",";
-	std::cout << "\n";
-	for (auto itr = d.begin(); itr != b; itr++)
-		std::cout << *itr << ",";
-	std::cout << "size=" << d.size() << std::endl;
-	d.erase(b, d.end());
-	std::cout << "size=" << d.size() << std::endl;
-	std::cout << d.begin() - d.end() << std::endl;
-	std::cout << "memory \n";
-	createTest();
-	int* z = new int[10];
-	Test u(1, 2);
-	Test v(2, 3);
-	operator == (u, v);
-	u == v;*/
-	//Test* w =:: new ((void*) z) Test ();
 	
 	/*	std::cout << "array\n";
 		TestClass t[5];
@@ -121,4 +95,23 @@ int main(){
 
 	//TODO: example about transofrm
 	//std::transform;
+	{
+		const int n = 10;
+		std::random_device e;
+		std::uniform_int_distribution<> dist(1, 10);
+		std::vector<int> v(10);
+		std::generate(v.begin(), v.end(), [&]() {return dist(e); });
+		
+		for (auto& x : v)
+			std::cout << x << ",";
+		std::cout << std::endl;
+		auto itr = ::remove_if(v.begin(), v.end(), [](int n) { return (n % 2 == 0); });
+		std::cout << "print from first event to end\n";
+		v.erase(itr, v.end());
+		for (auto i = v.begin(); i != v.end(); ++i)
+			std::cout << *i << ",";
+
+		std::cout << std::endl;
+
+	}
 }
