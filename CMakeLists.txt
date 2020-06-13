@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.0)
-project (assign1 LANGUAGES CXX)
+project (assign2 LANGUAGES CXX)
 add_executable (main main.cpp TestClass.h)
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT "main")
 set(CMAKE_SUPPRESS_REGENERATION true)
